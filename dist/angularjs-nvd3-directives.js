@@ -1,6 +1,6 @@
-/*! angularjs-nvd3-directives - v0.0.7 - 2014-06-26
+/*! angularjs-nvd3-directives - v0.0.7 - 2015-01-10
  * http://cmaurer.github.io/angularjs-nvd3-directives
- * Copyright (c) 2014 Christian Maurer; Licensed Apache License, v2.0 */
+ * Copyright (c) 2015 Christian Maurer; Licensed Apache License, v2.0 */
 ( function () {
   'use strict';
 
@@ -128,72 +128,70 @@
         };
       }
     };
-  } ).directive( 'nvd3Legend', [
-    function () {
-      var margin, width, height, id;
-      return {
-        restrict: 'EA',
-        scope: {
-          data: '=',
-          id: '@',
-          margin: '&',
-          width: '@',
-          height: '@',
-          key: '&',
-          color: '&',
-          align: '@',
-          rightalign: '@',
-          updatestate: '@',
-          radiobuttonmode: '@',
-          x: '&',
-          y: '&'
-        },
-        link: function ( scope, element, attrs ) {
-          scope.$watch( 'data', function ( data ) {
-            if ( data ) {
-              if ( scope.chart ) {
-                return d3.select( '#' + attrs.id + ' svg' ).attr( 'height', height ).attr( 'width', width ).datum( data ).transition().duration( 250 ).call( scope.chart );
-              }
-              margin = scope.$eval( attrs.margin ) || {
-                top: 5,
-                right: 0,
-                bottom: 5,
-                left: 0
-              };
-              width = attrs.width === undefined ? element[ 0 ].parentElement.offsetWidth - ( margin.left + margin.right ) : +attrs.width - ( margin.left + margin.right );
-              height = attrs.height === undefined ? element[ 0 ].parentElement.offsetHeight - ( margin.top + margin.bottom ) : +attrs.height - ( margin.top + margin.bottom );
-              if ( width === undefined || width < 0 ) {
-                width = 400;
-              }
-              if ( height === undefined || height < 0 ) {
-                height = 20;
-              }
-              if ( !attrs.id ) {
-                //if an id is not supplied, create a random id.
-                id = 'legend-' + Math.random();
-              } else {
-                id = attrs.id;
-              }
-              nv.addGraph( {
-                generate: function () {
-                  var chart = nv.models.legend().width( width ).height( height ).margin( margin ).align( attrs.align === undefined ? true : attrs.align === 'true' ).rightAlign( attrs.rightalign === undefined ? true : attrs.rightalign === 'true' ).updateState( attrs.updatestate === undefined ? true : attrs.updatestate === 'true' ).radioButtonMode( attrs.radiobuttonmode === undefined ? false : attrs.radiobuttonmode === 'true' ).color( attrs.color === undefined ? nv.utils.defaultColor() : scope.color() ).key( attrs.key === undefined ? function ( d ) {
-                    return d.key;
-                  } : scope.key() );
-                  if ( !d3.select( '#' + attrs.id + ' svg' )[ 0 ][ 0 ] ) {
-                    d3.select( '#' + attrs.id ).append( 'svg' );
-                  }
-                  d3.select( '#' + attrs.id + ' svg' ).attr( 'height', height ).attr( 'width', width ).datum( data ).transition().duration( 250 ).call( chart );
-                  nv.utils.windowResize( chart.update );
-                  scope.chart = chart;
-                  return chart;
-                }
-              } );
+  } ).directive( 'nvd3Legend', [ function () {
+    var margin, width, height, id;
+    return {
+      restrict: 'EA',
+      scope: {
+        data: '=',
+        id: '@',
+        margin: '&',
+        width: '@',
+        height: '@',
+        key: '&',
+        color: '&',
+        align: '@',
+        rightalign: '@',
+        updatestate: '@',
+        radiobuttonmode: '@',
+        x: '&',
+        y: '&'
+      },
+      link: function ( scope, element, attrs ) {
+        scope.$watch( 'data', function ( data ) {
+          if ( data ) {
+            if ( scope.chart ) {
+              return d3.select( '#' + attrs.id + ' svg' ).attr( 'height', height ).attr( 'width', width ).datum( data ).transition().duration( 250 ).call( scope.chart );
             }
-          } );
-        }
-      };
-    }
-  ] );
+            margin = scope.$eval( attrs.margin ) || {
+              top: 5,
+              right: 0,
+              bottom: 5,
+              left: 0
+            };
+            width = attrs.width === undefined ? element[ 0 ].parentElement.offsetWidth - ( margin.left + margin.right ) : +attrs.width - ( margin.left + margin.right );
+            height = attrs.height === undefined ? element[ 0 ].parentElement.offsetHeight - ( margin.top + margin.bottom ) : +attrs.height - ( margin.top + margin.bottom );
+            if ( width === undefined || width < 0 ) {
+              width = 400;
+            }
+            if ( height === undefined || height < 0 ) {
+              height = 20;
+            }
+            if ( !attrs.id ) {
+              //if an id is not supplied, create a random id.
+              id = 'legend-' + Math.random();
+            } else {
+              id = attrs.id;
+            }
+            nv.addGraph( {
+              generate: function () {
+                var chart = nv.models.legend().width( width ).height( height ).margin( margin ).align( attrs.align === undefined ? true : attrs.align === 'true' ).rightAlign( attrs.rightalign === undefined ? true : attrs.rightalign === 'true' ).updateState( attrs.updatestate === undefined ? true : attrs.updatestate === 'true' ).radioButtonMode( attrs.radiobuttonmode === undefined ? false : attrs.radiobuttonmode === 'true' ).color( attrs.color === undefined ? nv.utils.defaultColor() : scope.color() ).key( attrs.key === undefined ? function ( d ) {
+                  return d.key;
+                } : scope.key() );
+                if ( !d3.select( '#' + attrs.id + ' svg' )[ 0 ][ 0 ] ) {
+                  d3.select( '#' + attrs.id ).append( 'svg' );
+                }
+                d3.select( '#' + attrs.id + ' svg' ).attr( 'height', height ).attr( 'width', width ).datum( data ).transition().duration( 250 ).call( chart );
+                nv.utils.windowResize( chart.update );
+                scope.chart = chart;
+                return chart;
+              }
+            } );
+          }
+        } );
+      }
+    };
+  } ] );
 
   function initializeLegendMargin( scope, attrs ) {
     var margin = ( scope.$eval( attrs.legendmargin ) || {
@@ -2840,6 +2838,129 @@
                   configureXaxis( chart, scope, attrs );
                   configureYaxis( chart, scope, attrs );
                   processEvents( chart, scope );
+                  scope.d3Call( data, chart );
+                  nv.utils.windowResize( chart.update );
+                  scope.chart = chart;
+                  return chart;
+                },
+                callback: attrs.callback === undefined ? null : scope.callback()
+              } );
+            }
+          }, attrs.objectequality === undefined ? false : attrs.objectequality === 'true' );
+        }
+      };
+    }
+  ] ).directive( 'nvd3MultiBoxplotChart', [
+    '$filter',
+    function ( $filter ) {
+      return {
+        restrict: 'EA',
+        scope: {
+          data: '=',
+          filtername: '=',
+          filtervalue: '=',
+          width: '@',
+          height: '@',
+          id: '@',
+          groupspacing: '@',
+          showlegend: '@',
+          tooltips: '@',
+          tooltipcontent: '&',
+          color: '&',
+          showcontrols: '@',
+          nodata: '@',
+          reducexticks: '@',
+          staggerlabels: '@',
+          rotatelabels: '@',
+          margin: '&',
+          x: '&',
+          y: '&',
+          forcey: '@',
+          delay: '@',
+          stacked: '@',
+          callback: '&',
+          showxaxis: '&',
+          xaxisorient: '&',
+          xaxisticks: '&',
+          xaxistickvalues: '&xaxistickvalues',
+          xaxisticksubdivide: '&',
+          xaxisticksize: '&',
+          xaxistickpadding: '&',
+          xaxistickformat: '&',
+          xaxislabel: '@',
+          xaxisscale: '&',
+          xaxisdomain: '&',
+          xaxisrange: '&',
+          xaxisrangeband: '&',
+          xaxisrangebands: '&',
+          xaxisshowmaxmin: '@',
+          xaxishighlightzero: '@',
+          xaxisrotatelabels: '@',
+          xaxisrotateylabel: '@',
+          xaxisstaggerlabels: '@',
+          xaxisaxislabeldistance: '@',
+          showyaxis: '&',
+          yaxisorient: '&',
+          yaxisticks: '&',
+          yaxistickvalues: '&yaxistickvalues',
+          yaxisticksubdivide: '&',
+          yaxisticksize: '&',
+          yaxistickpadding: '&',
+          yaxistickformat: '&',
+          yaxislabel: '@',
+          yaxisscale: '&',
+          yaxisdomain: '&',
+          yaxisrange: '&',
+          yaxisrangeband: '&',
+          yaxisrangebands: '&',
+          yaxisshowmaxmin: '@',
+          yaxishighlightzero: '@',
+          yaxisrotatelabels: '@',
+          yaxisrotateylabel: '@',
+          yaxisstaggerlabels: '@',
+          yaxislabeldistance: '@',
+          legendmargin: '&',
+          legendwidth: '@',
+          legendheight: '@',
+          legendkey: '@',
+          legendcolor: '&',
+          legendalign: '@',
+          legendrightalign: '@',
+          legendupdatestate: '@',
+          legendradiobuttonmode: '@',
+          objectequality: '@',
+          transitionduration: '@'
+        },
+        controller: [
+          '$scope',
+          '$element',
+          '$attrs',
+          function ( $scope, $element, $attrs ) {
+            $scope.d3Call = function ( data, chart ) {
+              checkElementID( $scope, $attrs, $element, chart, data );
+            };
+          }
+        ],
+        link: function ( scope, element, attrs ) {
+          scope.$watch( 'width + height', function () {
+            updateDimensions( scope, attrs, element, scope.chart );
+          } );
+          scope.$watch( 'data', function ( data ) {
+            if ( data && angular.isDefined( scope.filtername ) && angular.isDefined( scope.filtervalue ) ) {
+              data = $filter( scope.filtername )( data, scope.filtervalue );
+            }
+            if ( data ) {
+              //if the chart exists on the scope, do not call addGraph again, update data and call the chart.
+              if ( scope.chart ) {
+                return scope.d3Call( data, scope.chart );
+              }
+              nv.addGraph( {
+                generate: function () {
+                  initializeMargin( scope, attrs );
+                  var chart = nv.models.multiBoxplotChart().width( scope.width ).height( scope.height ).margin( scope.margin ).transitionDuration( attrs.transitionduration === undefined ? 250 : +attrs.transitionduration ).showControls( false ).showXAxis( attrs.showxaxis === undefined ? false : attrs.showxaxis === 'true' ).showYAxis( attrs.showyaxis === undefined ? false : attrs.showyaxis === 'true' ).reduceXTicks( attrs.reducexticks === undefined ? false : attrs.reducexticks === 'true' ).staggerLabels( attrs.staggerlabels === undefined ? false : attrs.staggerlabels === 'true' ).noData( attrs.nodata === undefined ? 'No Data Available.' : scope.nodata ).rotateLabels( attrs.rotatelabels === undefined ? 0 : attrs.rotatelabels ).color( attrs.color === undefined ? nv.utils.defaultColor() : scope.color() ).delay( attrs.delay === undefined ? 1200 : attrs.delay ).groupSpacing( attrs.groupspacing === undefined ? 0.5 : attrs.groupspacing );
+                  if ( attrs.tooltipcontent ) {
+                    chart.tooltipContent( scope.tooltipcontent() );
+                  }
                   scope.d3Call( data, chart );
                   nv.utils.windowResize( chart.update );
                   scope.chart = chart;
