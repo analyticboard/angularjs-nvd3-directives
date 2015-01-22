@@ -2480,6 +2480,7 @@
                           .showXAxis(attrs.showxaxis === undefined ? false : (attrs.showxaxis  === 'true'))
                           .showYAxis(attrs.showyaxis === undefined ? false : (attrs.showyaxis  === 'true'))
                           .reduceXTicks(attrs.reducexticks === undefined ? false: (attrs.reducexticks === 'true'))
+                          .showLegend( attrs.showlegend === undefined ? false : attrs.showlegend === 'true' )
                           .staggerLabels(attrs.staggerlabels === undefined ? false : (attrs.staggerlabels === 'true'))
                           .noData(attrs.nodata === undefined ? 'No Data Available.' : scope.nodata)
                           .rotateLabels(attrs.rotatelabels === undefined ? 0 : attrs.rotatelabels)

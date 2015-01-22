@@ -1,4 +1,4 @@
-/*! angularjs-nvd3-directives - v0.0.7 - 2015-01-10
+/*! angularjs-nvd3-directives - v0.0.7 - 2015-01-21
  * http://cmaurer.github.io/angularjs-nvd3-directives
  * Copyright (c) 2015 Christian Maurer; Licensed Apache License, v2.0 */
 ( function () {
@@ -2957,7 +2957,7 @@
               nv.addGraph( {
                 generate: function () {
                   initializeMargin( scope, attrs );
-                  var chart = nv.models.multiBoxplotChart().width( scope.width ).height( scope.height ).margin( scope.margin ).transitionDuration( attrs.transitionduration === undefined ? 250 : +attrs.transitionduration ).showControls( false ).showXAxis( attrs.showxaxis === undefined ? false : attrs.showxaxis === 'true' ).showYAxis( attrs.showyaxis === undefined ? false : attrs.showyaxis === 'true' ).reduceXTicks( attrs.reducexticks === undefined ? false : attrs.reducexticks === 'true' ).staggerLabels( attrs.staggerlabels === undefined ? false : attrs.staggerlabels === 'true' ).noData( attrs.nodata === undefined ? 'No Data Available.' : scope.nodata ).rotateLabels( attrs.rotatelabels === undefined ? 0 : attrs.rotatelabels ).color( attrs.color === undefined ? nv.utils.defaultColor() : scope.color() ).delay( attrs.delay === undefined ? 1200 : attrs.delay ).groupSpacing( attrs.groupspacing === undefined ? 0.5 : attrs.groupspacing );
+                  var chart = nv.models.multiBoxplotChart().width( scope.width ).height( scope.height ).margin( scope.margin ).transitionDuration( attrs.transitionduration === undefined ? 250 : +attrs.transitionduration ).showControls( false ).showXAxis( attrs.showxaxis === undefined ? false : attrs.showxaxis === 'true' ).showYAxis( attrs.showyaxis === undefined ? false : attrs.showyaxis === 'true' ).reduceXTicks( attrs.reducexticks === undefined ? false : attrs.reducexticks === 'true' ).showLegend( attrs.showlegend === undefined ? false : attrs.showlegend === 'true' ).staggerLabels( attrs.staggerlabels === undefined ? false : attrs.staggerlabels === 'true' ).noData( attrs.nodata === undefined ? 'No Data Available.' : scope.nodata ).rotateLabels( attrs.rotatelabels === undefined ? 0 : attrs.rotatelabels ).color( attrs.color === undefined ? nv.utils.defaultColor() : scope.color() ).delay( attrs.delay === undefined ? 1200 : attrs.delay ).groupSpacing( attrs.groupspacing === undefined ? 0.5 : attrs.groupspacing );
                   if ( attrs.tooltipcontent ) {
                     chart.tooltipContent( scope.tooltipcontent() );
                   }
