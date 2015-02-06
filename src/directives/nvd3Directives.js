@@ -2453,6 +2453,7 @@
             controller: ['$scope', '$element', '$attrs', function($scope, $element, $attrs){
               $scope.d3Call = function(data, chart){
                 checkElementID($scope, $attrs, $element, chart, data);
+                chart.update();
               };
             }],
             link: function(scope, element, attrs){
