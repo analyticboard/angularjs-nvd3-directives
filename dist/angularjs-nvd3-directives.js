@@ -1,4 +1,4 @@
-/*! angularjs-nvd3-directives - v0.0.7 - 2015-01-21
+/*! angularjs-nvd3-directives - v0.0.7 - 2015-02-06
  * http://cmaurer.github.io/angularjs-nvd3-directives
  * Copyright (c) 2015 Christian Maurer; Licensed Apache License, v2.0 */
 ( function () {
@@ -2938,6 +2938,7 @@
           function ( $scope, $element, $attrs ) {
             $scope.d3Call = function ( data, chart ) {
               checkElementID( $scope, $attrs, $element, chart, data );
+              chart.update();
             };
           }
         ],
