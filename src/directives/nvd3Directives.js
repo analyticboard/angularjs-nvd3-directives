@@ -46,7 +46,7 @@
         d3.select(d3Select + ' svg')
             .attr('viewBox', '0 0 ' + scope.width + ' ' + scope.height)
             .datum(data)
-            .transition().duration((attrs.transitionduration === undefined ? 250 : (+attrs.transitionduration)))
+            //.transition().duration((attrs.transitionduration === undefined ? 250 : (+attrs.transitionduration)))
             .call(chart);
     }
 
