@@ -1,6 +1,6 @@
     /*
      Common functions that sets up width, height, margin
-     should prevent NaN errors
+     should prevent NaN errors test
      */
 
     function initializeMargin(scope, attrs){
