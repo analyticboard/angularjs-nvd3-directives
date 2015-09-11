@@ -1,4 +1,4 @@
-/*! angularjs-nvd3-directives - v0.0.7 - 2015-02-11
+/*! angularjs-nvd3-directives - v0.0.7 - 2015-09-11
  * http://cmaurer.github.io/angularjs-nvd3-directives
  * Copyright (c) 2015 Christian Maurer; Licensed Apache License, v2.0 */
 ( function () {
@@ -763,7 +763,22 @@
     }
     scope.margin = margin;
   }
-
+  //************Modificado LCongote 26/08/15 funcionalidad de franja
+  function initializeRange( scope, attrs ) {
+    var rangedata = scope.$eval( attrs.rangedata ) || {
+      top: 0,
+      bottom: 0
+    };
+    if ( typeof rangedata !== 'object' ) {
+      // we were passed a vanilla int, convert to full margin object
+      rangedata = {
+        top: rangedata,
+        bottom: rangedata
+      };
+    }
+    scope.rangedata = rangedata;
+  }
+  //************Fin Modificado LCongote 26/08/15 funcionalidad de franja
   function getD3Selector( attrs, element ) {
     if ( !attrs.id ) {
       //if an id is not supplied, create a random id.
@@ -791,7 +806,7 @@
     if ( d3.select( d3Select + ' svg' ).empty() ) {
       d3.select( d3Select ).append( 'svg' );
     }
-    d3.select( d3Select + ' svg' ).attr( 'viewBox', '0 0 ' + scope.width + ' ' + scope.height ).datum( data ).transition().duration( 250 ).call( chart );
+    d3.select( d3Select + ' svg' ).attr( 'viewBox', '0 0 ' + scope.width + ' ' + scope.height ).datum( data ).call( chart );
   }
 
   function updateDimensions( scope, attrs, element, chart ) {
@@ -3085,6 +3100,140 @@
                   var chart = nv.models.radarChart().width( scope.width ).height( scope.height ).margin( scope.margin ).showLegend( attrs.showlegend === undefined ? true : attrs.showlegend === 'false' );
                   //.noData(attrs.nodata === undefined ? 'No Data Available.' : scope.nodata)
                   //.color(attrs.color === undefined ? nv.utils.defaultColor()  : scope.color());
+                  if ( attrs.tooltipcontent ) {
+                    chart.tooltipContent( scope.tooltipcontent() );
+                  }
+                  scope.d3Call( data, chart );
+                  nv.utils.windowResize( chart.update );
+                  scope.chart = chart;
+                  return chart;
+                },
+                callback: attrs.callback === undefined ? null : scope.callback()
+              } );
+            }
+          }, attrs.objectequality === undefined ? false : attrs.objectequality === 'true' );
+        }
+      };
+    }
+  ] ).directive( 'nvd3MultiBarRefChart', [
+    '$filter',
+    function ( $filter ) {
+      return {
+        restrict: 'EA',
+        scope: {
+          data: '=',
+          filtername: '=',
+          filtervalue: '=',
+          width: '@',
+          height: '@',
+          id: '@',
+          showlegend: '@',
+          tooltips: '@',
+          tooltipcontent: '&',
+          color: '&',
+          showcontrols: '@',
+          nodata: '@',
+          reducexticks: '@',
+          staggerlabels: '@',
+          rotatelabels: '@',
+          margin: '&',
+          x: '&',
+          y: '&',
+          forcey: '@',
+          delay: '@',
+          stacked: '@',
+          callback: '&',
+          showxaxis: '&',
+          xaxisorient: '&',
+          xaxisticks: '&',
+          xaxistickvalues: '&xaxistickvalues',
+          xaxisticksubdivide: '&',
+          xaxisticksize: '&',
+          xaxistickpadding: '&',
+          xaxistickformat: '&',
+          xaxislabel: '@',
+          xaxisscale: '&',
+          xaxisdomain: '&',
+          xaxisrange: '&',
+          xaxisrangeband: '&',
+          xaxisrangebands: '&',
+          xaxisshowmaxmin: '@',
+          xaxishighlightzero: '@',
+          xaxisrotatelabels: '@',
+          xaxisrotateylabel: '@',
+          xaxisstaggerlabels: '@',
+          xaxisaxislabeldistance: '@',
+          showyaxis: '&',
+          yaxisorient: '&',
+          yaxisticks: '&',
+          yaxistickvalues: '&yaxistickvalues',
+          yaxisticksubdivide: '&',
+          yaxisticksize: '&',
+          yaxistickpadding: '&',
+          yaxistickformat: '&',
+          yaxislabel: '@',
+          yaxisscale: '&',
+          yaxisdomain: '&',
+          yaxisrange: '&',
+          yaxisrangeband: '&',
+          yaxisrangebands: '&',
+          yaxisshowmaxmin: '@',
+          yaxishighlightzero: '@',
+          yaxisrotatelabels: '@',
+          yaxisrotateylabel: '@',
+          yaxisstaggerlabels: '@',
+          yaxislabeldistance: '@',
+          legendmargin: '&',
+          legendwidth: '@',
+          legendheight: '@',
+          legendkey: '@',
+          legendcolor: '&',
+          legendalign: '@',
+          legendrightalign: '@',
+          legendupdatestate: '@',
+          legendradiobuttonmode: '@',
+          objectequality: '@',
+          rangerect: '@',
+          rangedata: '&',
+          showref: '@',
+          transitionduration: '@'
+        },
+        controller: [
+          '$scope',
+          '$element',
+          '$attrs',
+          function ( $scope, $element, $attrs ) {
+            $scope.d3Call = function ( data, chart ) {
+              checkElementID( $scope, $attrs, $element, chart, data );
+            };
+          }
+        ],
+        link: function ( scope, element, attrs ) {
+          scope.$watch( 'width + height', function () {
+            updateDimensions( scope, attrs, element, scope.chart );
+          } );
+          scope.$watch( 'data', function ( data ) {
+            if ( data && angular.isDefined( scope.filtername ) && angular.isDefined( scope.filtervalue ) ) {
+              data = $filter( scope.filtername )( data, scope.filtervalue );
+            }
+            if ( data ) {
+              //if the chart exists on the scope, do not call addGraph again, update data and call the chart.
+              if ( scope.chart ) {
+                return scope.d3Call( data, scope.chart );
+              }
+              nv.addGraph( {
+                generate: function () {
+                  initializeMargin( scope, attrs );
+                  //************Modificado LCongote 26/08/15 funcionalidad de franja
+                  initializeRange( scope, attrs );
+                  //************Fin Modificado LCongote 26/08/15 funcionalidad de franja
+                  //console.log(scope);
+                  //console.log(attrs);
+                  var chart = nv.models.multiBarRefChart().width( scope.width ).height( scope.height ).rangedata( scope.rangedata ).margin( scope.margin ).x( attrs.x === undefined ? function ( d ) {
+                    return d[ 0 ];
+                  } : scope.x() ).y( attrs.y === undefined ? function ( d ) {
+                    return d[ 1 ];
+                  } : scope.y() ).forceY( attrs.forcey === undefined ? [ 0 ] : scope.$eval( attrs.forcey ) ).rangeRect( attrs.rangerect === undefined ? false : attrs.rangerect === 'true' ).showref( attrs.showref === undefined ? false : attrs.showref === 'true' ).showLegend( attrs.showlegend === undefined ? false : attrs.showlegend === 'true' ).showControls( attrs.showcontrols === undefined ? false : attrs.showcontrols === 'true' ).showXAxis( attrs.showxaxis === undefined ? false : attrs.showxaxis === 'true' ).showYAxis( attrs.showyaxis === undefined ? false : attrs.showyaxis === 'true' ).tooltips( attrs.tooltips === undefined ? false : attrs.tooltips === 'true' ).reduceXTicks( attrs.reducexticks === undefined ? false : attrs.reducexticks === 'true' ).staggerLabels( attrs.staggerlabels === undefined ? false : attrs.staggerlabels === 'true' ).noData( attrs.nodata === undefined ? 'No Data Available.' : scope.nodata ).rotateLabels( attrs.rotatelabels === undefined ? 0 : attrs.rotatelabels ).color( attrs.color === undefined ? nv.utils.defaultColor() : scope.color() ).delay( attrs.delay === undefined ? 1200 : attrs.delay ).stacked( attrs.stacked === undefined ? false : attrs.stacked === 'true' );
                   if ( attrs.tooltipcontent ) {
                     chart.tooltipContent( scope.tooltipcontent() );
                   }
